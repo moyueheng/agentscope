@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""The structured output models for werewolf game."""
+"""狼人杀游戏的结构化输出模型。"""
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -8,48 +8,47 @@ from agentscope.agent import AgentBase
 
 
 class DiscussionModel(BaseModel):
-    """The output format for discussion."""
+    """讨论阶段的输出格式。"""
 
     reach_agreement: bool = Field(
-        description="Whether you have reached an agreement or not",
+        description="是否已达成一致",
     )
 
 
 def get_vote_model(agents: list[AgentBase]) -> type[BaseModel]:
-    """Get the vote model by player names."""
+    """根据玩家姓名生成投票模型。"""
 
     class VoteModel(BaseModel):
-        """The vote output format."""
+        """投票的输出格式。"""
 
         vote: Literal[tuple(_.name for _ in agents)] = Field(  # type: ignore
-            description="The name of the player you want to vote for",
+            description="你要投票给的玩家姓名",
         )
 
     return VoteModel
 
 
 class WitchResurrectModel(BaseModel):
-    """The output format for witch resurrect action."""
+    """女巫复活行为的输出格式。"""
 
     resurrect: bool = Field(
-        description="Whether you want to resurrect the player",
+        description="是否要复活该玩家",
     )
 
 
 def get_poison_model(agents: list[AgentBase]) -> type[BaseModel]:
-    """Get the poison model by player names."""
+    """根据玩家姓名生成女巫毒药模型。"""
 
     class WitchPoisonModel(BaseModel):
-        """The output format for witch poison action."""
+        """女巫使用毒药的输出格式。"""
 
         poison: bool = Field(
-            description="Do you want to use the poison potion",
+            description="是否要使用毒药",
         )
         name: Literal[  # type: ignore
             tuple(_.name for _ in agents)
         ] | None = Field(
-            description="The name of the player you want to poison, if you "
-            "don't want to poison anyone, just leave it empty",
+            description="你要毒杀的玩家姓名；如果不毒杀任何人，留空即可",
             default=None,
         )
 
@@ -57,32 +56,31 @@ def get_poison_model(agents: list[AgentBase]) -> type[BaseModel]:
 
 
 def get_seer_model(agents: list[AgentBase]) -> type[BaseModel]:
-    """Get the seer model by player names."""
+    """根据玩家姓名生成预言家模型。"""
 
     class SeerModel(BaseModel):
-        """The output format for seer action."""
+        """预言家查验的输出格式。"""
 
         name: Literal[tuple(_.name for _ in agents)] = Field(  # type: ignore
-            description="The name of the player you want to check",
+            description="你要查验的玩家姓名",
         )
 
     return SeerModel
 
 
 def get_hunter_model(agents: list[AgentBase]) -> type[BaseModel]:
-    """Get the hunter model by player agents."""
+    """根据玩家代理对象生成猎人模型。"""
 
     class HunterModel(BaseModel):
-        """The output format for hunter action."""
+        """猎人开枪的输出格式。"""
 
         shoot: bool = Field(
-            description="Whether you want to use the shooting ability or not",
+            description="是否要使用开枪技能",
         )
         name: Literal[  # type: ignore
             tuple(_.name for _ in agents)
         ] | None = Field(
-            description="The name of the player you want to shoot, if you "
-            "don't want to the ability, just leave it empty",
+            description="你要开枪击杀的玩家姓名；如果不使用该技能，留空即可",
             default=None,
         )
 

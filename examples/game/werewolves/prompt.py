@@ -1,171 +1,155 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=line-too-long
-"""Related prompts"""
+"""相关提示词"""
 
 
 class Prompts:
     """Related prompts"""
 
-    system_prompt = """You're a werewolf game player named {player_name}.
+    system_prompt = """你是一名狼人杀玩家，名字是 {player_name}。
 
-# YOUR TARGET
-Your target is to win the game with your teammates as much as possible.
+# 你的目标
+你的目标是尽可能与队友一起赢得比赛。
 
-# GAME RULES
-- In werewolf game, players are divided into three werewolves, three villagers, one seer, one hunter and one witch.
-    - Werewolves: kill one player each night, and must hide identity during the day.
-    - Villagers: ordinary players without special abilities, try to identify and eliminate werewolves.
-        - Seer: A special villager who can checkone player's identity each night.
-        - Witch: A special villager with two one-time-use potions: a healing potion to save a player from being killed at night, and a poison to eliminate one player at night.
-        - Hunter: A special villager who can take one player down with them when they are eliminated.
-- The game alternates between night and day phases until one side wins:
-    - Night Phase
-        - Werewolves choose one victim
-        - Seer checks one player's identity
-        - Witch decides whether to use potions
-        - Moderator announces who died during the night
-    - Day Phase
-        - All players discuss and vote to eliminate one suspected player
+# 游戏规则
+- 在狼人杀中，玩家分为：三名狼人、三名村民、一名预言家、一名猎人和一名女巫。
+    - 狼人：每晚选择一名玩家击杀，白天必须隐藏身份。
+    - 村民：没有特殊能力的普通玩家，努力识别并淘汰狼人。
+        - 预言家：特殊村民，每晚可查验一名玩家的身份。
+        - 女巫：特殊村民，拥有两瓶一次性药水：解药可在夜晚救活被击杀的玩家，毒药可在夜晚毒死一名玩家。
+        - 猎人：特殊村民，被淘汰时可以选择带走一名玩家。
+- 游戏在夜晚与白天间交替进行，直至一方获胜：
+    - 夜晚阶段
+        - 狼人选择一名受害者
+        - 预言家查验一名玩家身份
+        - 女巫决定是否使用药水
+        - 主持人宣布夜间死亡情况
+    - 白天阶段
+        - 所有玩家讨论并投票淘汰一名嫌疑玩家
 
-# GAME GUIDANCE
-- Try your best to win the game with your teammates, tricks, lies, and deception are all allowed, e.g. pretending to be a different role.
-- During discussion, don't be political, be direct and to the point.
-- The day phase voting provides important clues. For example, the werewolves may vote together, attack the seer, etc.
+# 游戏指引
+- 尽全力与队友获胜，策略、谎言与欺骗均被允许，例如伪装成不同角色。
+- 讨论时避免空话，直截了当、切中要点。
+- 白天的投票提供重要线索，例如狼人可能集中投票、攻击预言家等。
 {guidance}
 
-# NOTE
-- [IMPORTANT] DO NOT make up any information that is not provided by the moderator or other players.
-- This is a TEXT-based game, so DO NOT use or make up any non-textual information.
-- Always critically reflect on whether your evidence exist, and avoid making assumptions.
-- Your response should be specific and concise, provide clear reason and avoid unnecessary elaboration.
-- Generate your one-line response by using the `generate_response` function.
-- Don't repeat the others' speeches.
-- Play the game in English.
+# 注意
+- [重要] 不要编造主持人或其他玩家未提供的信息。
+- 这是一个纯文本游戏，请不要使用或编造任何非文本信息。
+- 始终批判性地审视证据是否存在，避免无依据的猜测。
+- 你的回答应具体且简洁，给出清晰理由，避免不必要的赘述。
+- 请使用 `generate_response` 函数生成你的单行回应。
+- 不要重复他人的发言。
+- 请用中文进行游戏。
 """  # noqa
 
-    notes_werewolf = """## GAME GUIDANCE FOR WEREWOLF
-- Seer is your greatest threat, who can check one player's identity each night. Analyze players' speeches, find out the seer and eliminate him/her will greatly increase your chances of winning.
-- In the first night, making random choices is common for werewolves since no information is available.
-- Pretending to be other roles (seer, witch or villager) is a common strategy to hide your identity and mislead other villagers in the day phase.
-- The outcome of the night phase provides important clues. For example, if witch uses the healing or poison potion, if the dead player is hunter, etc. Use this information to adjust your strategy."""  # noqa
+    notes_werewolf = """## 狼人角色指引
+- 预言家是你最大的威胁，他/她每晚可以查验一名玩家身份。分析所有人的发言，找出并淘汰预言家，将大幅提升你的胜率。
+- 第一晚由于信息不足，狼人随机选择目标是常见策略。
+- 白天伪装成其他角色（预言家、女巫或村民）是隐藏身份、误导村民的常用策略。
+- 夜间结果提供重要线索，例如女巫是否用了解药或毒药、死亡玩家是否为猎人等。利用这些信息调整策略。"""  # noqa
 
-    notes_seer = """## GAME GUIDANCE FOR SEER
-- Seer is very important to villagers, exposing yourself too early may lead to being targeted by werewolves.
-- Your ability to check one player's identity is crucial.
-- The outcome of the night phase provides important clues. For example, if witch uses the healing or poison potion, if the dead player is hunter, etc. Use this information to adjust your strategy."""  # noqa
+    notes_seer = """## 预言家角色指引
+- 预言家对村民至关重要，过早暴露身份可能会被狼人针对。
+- 你每晚查验一名玩家身份的能力至关重要。
+- 夜间结果提供重要线索，例如女巫是否用了解药或毒药、死亡玩家是否为猎人等。根据信息调整策略。"""  # noqa
 
-    notes_witch = """## GAME GUIDANCE FOR WITCH
-- Witch has two powerful potions, use them wisely to protect key villagers or eliminate suspected werewolves.
-- The outcome of the night phase provides important clues. For example, if the dead player is hunter, etc. Use this information to adjust your strategy."""  # noqa
+    notes_witch = """## 女巫角色指引
+- 女巫拥有两瓶强力药水，请谨慎使用，以保护关键村民或毒杀可疑狼人。
+- 夜间结果提供重要线索，例如死亡玩家是否为猎人等。根据信息调整策略。"""  # noqa
 
-    notes_hunter = """## GAME GUIDANCE FOR HUNTER
-- Using your ability in day phase will expose your role (since only hunter can take one player down)
-- The outcome of the night phase provides important clues. For example, if witch uses the healing or poison potion, etc. Use this information to adjust your strategy."""  # noqa
+    notes_hunter = """## 猎人角色指引
+- 在白天使用技能会暴露你的身份（只有猎人能带走一名玩家）。
+- 夜间结果提供重要线索，例如女巫是否用了药水等。根据信息调整策略。"""  # noqa
 
-    notes_villager = """## GAME GUIDANCE FOR VILLAGER
-- Protecting special villagers, especially the seer, is crucial for your team's success.
-- Werewolves may pretend to be the seer. Be cautious and don't trust anyone easily.
-- The outcome of the night phase provides important clues. For example, if witch uses the healing or poison potion, if the dead player is hunter, etc. Use this information to adjust your strategy."""  # noqa
+    notes_villager = """## 村民角色指引
+- 保护特殊村民，尤其是预言家，对你们的胜利至关重要。
+- 狼人可能会假冒预言家。保持警惕，不要轻信他人。
+- 夜间结果提供重要线索，例如女巫是否用了解药或毒药、死亡玩家是否为猎人等。根据信息调整策略。"""  # noqa
 
     to_all_night = (
-        "Night has fallen, everyone close your eyes. Werewolves open your "
-        "eyes and choose a player to eliminate tonight."
+        "夜晚降临，所有人请闭眼。狼人请睁眼并选择今晚要淘汰的一名玩家。"
     )
 
     to_wolves_discussion = (
-        "[WEREWOLVES ONLY] {}, you should discuss and "
-        "decide on a player to eliminate tonight. Current alive players "
-        "are {}. Remember to set `reach_agreement` to True if you reach an "
-        "agreement during the discussion."
+        "[仅限狼人] {}，你们需要讨论并决定今晚要淘汰的一名玩家。当前存活玩家为{}。"
+        "若在讨论中达成一致，请将 `reach_agreement` 设为 True。"
     )
 
-    to_wolves_vote = "[WEREWOLVES ONLY] Which player do you vote to kill?"
+    to_wolves_vote = "[仅限狼人] 你们投票决定要击杀哪位玩家？"
 
     to_wolves_res = (
-        "[WEREWOLVES ONLY] The voting result is {}. So you have chosen to "
-        "eliminate {}."
+        "[仅限狼人] 投票结果为 {}。因此你们选择淘汰 {}。"
     )
 
     to_all_witch_turn = (
-        "Witch's turn, witch open your eyes and decide your action tonight."
+        "轮到女巫行动，女巫请睁眼并决定你今晚的操作。"
     )
     to_witch_resurrect = (
-        "[WITCH ONLY] {witch_name}, you're the witch, and tonight {dead_name} "
-        "is eliminated. You can resurrect him/her by using your healing "
-        "potion, "
-        "and note you can only use it once in the whole game. Do you want to "
-        "resurrect {dead_name}? Give me your reason and decision."
+        "[仅限女巫] {witch_name}，你是女巫，今晚 {dead_name} 被淘汰。你可以使用解药复活他/她。"
+        "注意整局游戏解药仅能使用一次。你是否要复活 {dead_name}？请给出理由和决策。"
     )
 
     to_witch_resurrect_no = (
-        "[WITCH ONLY] The witch has chosen not to resurrect the player."
+        "[仅限女巫] 女巫选择不复活该玩家。"
     )
     to_witch_resurrect_yes = (
-        "[WITCH ONLY] The witch has chosen to resurrect the player."
+        "[仅限女巫] 女巫选择复活该玩家。"
     )
 
     to_witch_poison = (
-        "[WITCH ONLY] {witch_name}, as a witch, you have a one-time-use "
-        "poison potion, do you want to use it tonight? Give me your reason "
-        "and decision."
+        "[仅限女巫] {witch_name}，作为女巫，你有一次性的毒药。你今晚是否要使用？请给出理由和决策。"
     )
 
     to_all_seer_turn = (
-        "Seer's turn, seer open your eyes and check one player's identity "
-        "tonight."
+        "轮到预言家行动，预言家请睁眼并在今晚查验一名玩家的身份。"
     )
 
     to_seer = (
-        "[SEER ONLY] {}, as the seer you can check one player's identity "
-        "tonight. Who do you want to check? Give me your reason and decision."
+        "[仅限预言家] {}，作为预言家，你可以在今晚查验一名玩家的身份。"
+        "你想查验谁？请给出理由和决策。"
     )
 
     to_seer_result = (
-        "[SEER ONLY] You've checked {agent_name}, and the result is: {role}."
+        "[仅限预言家] 你查验了 {agent_name}，结果为：{role}。"
     )
 
     to_hunter = (
-        "[HUNTER ONLY] {name}, as the hunter you're eliminated tonight. You "
-        "can choose one player to take down with you. Also, you can choose "
-        "not to use this ability. Give me your reason and decision."
+        "[仅限猎人] {name}，作为猎人，你今晚被淘汰。你可以选择带走一名玩家；也可以选择不使用该能力。"
+        "请给出理由和决策。"
     )
 
     to_all_hunter_shoot = (
-        "The hunter has chosen to shoot {} down with him/herself."
+        "猎人选择将 {} 一并带走。"
     )
 
     to_all_day = (
-        "The day is coming, all players open your eyes. Last night, "
-        "the following player(s) has been eliminated: {}."
+        "天亮了，所有玩家请睁眼。昨夜被淘汰的玩家为：{}。"
     )
 
     to_all_peace = (
-        "The day is coming, all the players open your eyes. Last night is "
-        "peaceful, no player is eliminated."
+        "天亮了，所有玩家请睁眼。昨夜平安无人被淘汰。"
     )
 
     to_all_discuss = (
-        "Now the alive players are {names}. The game goes on, it's time to "
-        "discuss and vote a player to be eliminated. Now you each take turns "
-        "to speak once in the order of {names}."
+        "当前存活玩家为 {names}。游戏继续，请讨论并投票淘汰一名玩家。"
+        "现在按 {names} 的顺序依次发言，每人一次。"
     )
 
     to_all_vote = (
-        "Now the discussion is over. Everyone, please vote to eliminate one "
-        "player from the alive players: {}."
+        "讨论结束。请大家从存活玩家 {} 中投票淘汰一人。"
     )
 
-    to_all_res = "The voting result is {}. So {} has been voted out."
+    to_all_res = "投票结果为 {}。因此 {} 被投出。"
 
     to_all_wolf_win = (
-        "There're {n_werewolves} werewolves alive and {n_villagers} villagers "
-        "alive.\n"
-        "The game is over and werewolves win!🐺🏆"
+        "当前存活狼人 {n_werewolves} 名，存活村民 {n_villagers} 名。\n"
+        "游戏结束，狼人阵营获胜！🐺🏆"
     )
 
     to_all_village_win = (
-        "All the werewolves have been eliminated.\n"
-        "The game is over and villagers win!🏘️🎉"
+        "所有狼人均已被淘汰。\n"
+        "游戏结束，村民阵营获胜！🏘️🎉"
     )
 
-    to_all_continue = "The game goes on."
+    to_all_continue = "游戏继续。"

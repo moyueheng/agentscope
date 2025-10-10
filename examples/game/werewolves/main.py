@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=too-many-branches, too-many-statements, no-name-in-module
-"""A werewolf game implemented by agentscope."""
+"""使用 agentscope 实现的狼人杀游戏。"""
 import asyncio
 import os
 
@@ -37,8 +37,7 @@ current_alive = []
 async def hunter_stage(
     hunter_agent: ReActAgent,
 ) -> str | None:
-    """Because the hunter's stage may happen in two places: killed at night
-    or voted during the day, we define a function here to avoid duplication."""
+    """猎人阶段可能发生在两处：夜晚被击杀或白天被投票淘汰。为避免重复逻辑，这里单独定义该流程。"""
     global current_alive, moderator
     msg_hunter = await hunter_agent(
         await moderator(Prompts.to_hunter.format(name=hunter_agent.name)),
@@ -50,7 +49,7 @@ async def hunter_stage(
 
 
 def update_players(dead_players: list[str]) -> None:
-    """Update the global alive players list by removing the dead players."""
+    """根据死亡名单更新全局的存活玩家列表。"""
     global werewolves, villagers, seer, hunter, witch, current_alive
     werewolves = [_ for _ in werewolves if _.name not in dead_players]
     villagers = [_ for _ in villagers if _.name not in dead_players]
@@ -61,7 +60,7 @@ def update_players(dead_players: list[str]) -> None:
 
 
 async def create_player(role: str) -> ReActAgent:
-    """Create a player with the given name and role."""
+    """创建包含姓名与角色的玩家代理。"""
     name = get_player_name()
     global NAME_TO_ROLE
     NAME_TO_ROLE[name] = role
@@ -80,15 +79,15 @@ async def create_player(role: str) -> ReActAgent:
     )
     await agent.observe(
         await moderator(
-            f"[{name} ONLY] {name}, your role is {role}.",
+            f"[仅限{name}] {name}，你的身份是 { {'villager':'村民','werewolf':'狼人','seer':'预言家','witch':'女巫','hunter':'猎人'}[role] }。",
         ),
     )
     return agent
 
 
 async def main() -> None:
-    """The main entry of the werewolf game"""
-    # Enable studio if you want
+    """狼人杀游戏入口函数。"""
+    # 如需启用 Studio，请取消以下注释
     # import agentscope
     # agentscope.init(
     #     studio_url="http://localhost:3000",
@@ -96,33 +95,33 @@ async def main() -> None:
     # )
     global healing, poison, villagers, werewolves, seer, witch, hunter
     global current_alive
-    # Create players
+    # 创建玩家
     villagers = [await create_player("villager") for _ in range(3)]
     werewolves = [await create_player("werewolf") for _ in range(3)]
     seer = [await create_player("seer")]
     witch = [await create_player("witch")]
     hunter = [await create_player("hunter")]
-    # Speak in order of names
+    # 按姓名顺序发言
     current_alive = sorted(
         werewolves + villagers + seer + witch + hunter,
         key=lambda _: _.name,
     )
 
-    # Game begin!
+    # 游戏开始！
     for _ in range(MAX_GAME_ROUND):
-        # Create a MsgHub for all players to broadcast messages
+        # 创建用于全体广播的 MsgHub
         async with MsgHub(
             participants=current_alive,
-            enable_auto_broadcast=False,  # manual broadcast only
+            enable_auto_broadcast=False,  # 手动广播模式
             name="all_players",
         ) as all_players_hub:
-            # Night phase
+            # 夜晚阶段
             await all_players_hub.broadcast(
                 await moderator(Prompts.to_all_night),
             )
             killed_player, poisoned_player, shot_player = None, None, None
 
-            # Werewolves discuss
+            # 狼人讨论
             async with MsgHub(
                 werewolves,
                 enable_auto_broadcast=True,
@@ -133,7 +132,7 @@ async def main() -> None:
                     ),
                 ),
             ) as werewolves_hub:
-                # Discussion
+                # 讨论阶段
                 res = None
                 for _ in range(1, MAX_DISCUSSION_ROUND * len(werewolves) + 1):
                     res = await werewolves[_ % len(werewolves)](
@@ -144,8 +143,8 @@ async def main() -> None:
                     ):
                         break
 
-                # Werewolves vote
-                # Disable auto broadcast to avoid following other's votes
+                # 狼人投票
+                # 关闭自动广播以避免跟票
                 werewolves_hub.set_auto_broadcast(False)
                 msgs_vote = await fanout_pipeline(
                     werewolves,
@@ -156,7 +155,7 @@ async def main() -> None:
                 killed_player, votes = majority_vote(
                     [_.metadata.get("vote") for _ in msgs_vote],
                 )
-                # Postpone the broadcast of voting
+                # 延后广播投票结果
                 await werewolves_hub.broadcast(
                     [
                         *msgs_vote,
@@ -166,13 +165,13 @@ async def main() -> None:
                     ],
                 )
 
-            # Witch's turn
+            # 女巫回合
             await all_players_hub.broadcast(
                 await moderator(Prompts.to_all_witch_turn),
             )
             msg_witch_poison = None
             for agent in witch:
-                # Cannot heal witch herself
+                # 女巫不能救自己
                 msg_witch_resurrect = None
                 if healing and killed_player != agent.name:
                     msg_witch_resurrect = await agent(
@@ -204,7 +203,7 @@ async def main() -> None:
                         poisoned_player = msg_witch_poison.metadata.get("name")
                         poison = False
 
-            # Seer's turn
+            # 预言家回合
             await all_players_hub.broadcast(
                 await moderator(Prompts.to_all_seer_turn),
             )
@@ -229,20 +228,20 @@ async def main() -> None:
                         ),
                     )
 
-            # Hunter's turn
+            # 猎人回合
             for agent in hunter:
-                # If killed and not by witch's poison
+                # 若被夜晚击杀，且不是女巫的毒药
                 if (
                     killed_player == agent.name
                     and poisoned_player != agent.name
                 ):
                     shot_player = await hunter_stage(agent)
 
-            # Update alive players
+            # 更新存活玩家列表
             dead_tonight = [killed_player, poisoned_player, shot_player]
             update_players(dead_tonight)
 
-            # Day phase
+            # 白天阶段
             if len([_ for _ in dead_tonight if _]) > 0:
                 await all_players_hub.broadcast(
                     await moderator(
@@ -256,13 +255,13 @@ async def main() -> None:
                     await moderator(Prompts.to_all_peace),
                 )
 
-            # Check winning
+            # 检查胜负
             res = check_winning(current_alive, werewolves)
             if res:
                 await moderator(res)
                 return
 
-            # Discussion
+            # 讨论阶段
             await all_players_hub.broadcast(
                 await moderator(
                     Prompts.to_all_discuss.format(
@@ -270,13 +269,13 @@ async def main() -> None:
                     ),
                 ),
             )
-            # Open the auto broadcast to enable discussion
+            # 开启自动广播以进行讨论
             all_players_hub.set_auto_broadcast(True)
             await sequential_pipeline(current_alive)
-            # Disable auto broadcast to avoid leaking info
+            # 关闭自动广播以避免泄露信息
             all_players_hub.set_auto_broadcast(False)
 
-            # Voting
+            # 投票阶段
             msgs_vote = await fanout_pipeline(
                 current_alive,
                 await moderator(
@@ -310,11 +309,11 @@ async def main() -> None:
                             ),
                         )
 
-            # Update alive players
+            # 更新存活玩家列表
             dead_today = [voted_player, shot_player]
             update_players(dead_today)
 
-            # Check winning
+            # 检查胜负
             res = check_winning(current_alive, werewolves)
             if res:
                 await moderator(res)
