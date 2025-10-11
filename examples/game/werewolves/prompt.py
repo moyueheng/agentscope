@@ -72,7 +72,7 @@ class Prompts:
     )
 
     to_wolves_discussion = (
-        "[仅限狼人] {}，你们需要讨论并决定今晚要淘汰的一名玩家。当前存活玩家为{}。"
+        "[仅限狼人] {werewolve_names}，你们需要讨论并决定今晚要淘汰的一名玩家。当前存活玩家为{villager_names}。"
         "若在讨论中达成一致，请将 `reach_agreement` 设为 True。"
     )
 

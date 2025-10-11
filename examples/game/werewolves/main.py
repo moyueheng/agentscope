@@ -1,31 +1,33 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=too-many-branches, too-many-statements, no-name-in-module
 """使用 agentscope 实现的狼人杀游戏。"""
+
 import asyncio
 import os
 
+from prompt import Prompts
 from structured_output import (
     DiscussionModel,
-    get_vote_model,
-    get_poison_model,
     WitchResurrectModel,
-    get_seer_model,
     get_hunter_model,
+    get_poison_model,
+    get_seer_model,
+    get_vote_model,
 )
-from prompt import Prompts
 from utils import (
-    check_winning,
-    majority_vote,
-    get_player_name,
-    names_to_str,
-    EchoAgent,
-    MAX_GAME_ROUND,
     MAX_DISCUSSION_ROUND,
+    MAX_GAME_ROUND,
+    EchoAgent,
+    check_winning,
+    get_player_name,
+    majority_vote,
+    names_to_str,
 )
+
 from agentscope.agent import ReActAgent
 from agentscope.formatter import DashScopeMultiAgentFormatter
-from agentscope.model import DashScopeChatModel
-from agentscope.pipeline import MsgHub, sequential_pipeline, fanout_pipeline
+from agentscope.model import DashScopeChatModel, OpenAIChatModel
+from agentscope.pipeline import MsgHub, fanout_pipeline, sequential_pipeline
 
 NAME_TO_ROLE = {}
 moderator = EchoAgent()
@@ -59,6 +61,26 @@ def update_players(dead_players: list[str]) -> None:
     current_alive = [_ for _ in current_alive if _.name not in dead_players]
 
 
+def get_model(provider: str) -> DashScopeChatModel:
+    """根据模型供应商返回对应的模型实例。"""
+    if provider == "dashscope":
+        return DashScopeChatModel(
+            model_name="qwen-max",
+            api_key=os.environ["DASHSCOPE_API_KEY"],
+            enable_thinking=True,
+        )
+    if provider == "quwan":
+        return OpenAIChatModel(
+            model_name="Qwen/Qwen3-32B",
+            api_key="sk-quwan-jarvis",
+            # enable_thinking=True,
+            client_args={
+                "base_url": "http://ray.ttyuyin.com:10001/vllm-qwen3-32b/v1",
+            },
+        )
+    raise ValueError(f"Unsupported model provider: {provider}")
+
+
 async def create_player(role: str) -> ReActAgent:
     """创建包含姓名与角色的玩家代理。"""
     name = get_player_name()
@@ -70,16 +92,12 @@ async def create_player(role: str) -> ReActAgent:
             player_name=name,
             guidance=getattr(Prompts, f"notes_{role}"),
         ),
-        model=DashScopeChatModel(
-            model_name="qwen-max",
-            api_key=os.environ["DASHSCOPE_API_KEY"],
-            enable_thinking=True,
-        ),
+        model=get_model("quwan"),
         formatter=DashScopeMultiAgentFormatter(),
     )
     await agent.observe(
         await moderator(
-            f"[仅限{name}] {name}，你的身份是 { {'villager':'村民','werewolf':'狼人','seer':'预言家','witch':'女巫','hunter':'猎人'}[role] }。",
+            f"[仅限{name}] {name}，你的身份是 { {'villager': '村民', 'werewolf': '狼人', 'seer': '预言家', 'witch': '女巫', 'hunter': '猎人'}[role] }。",
         ),
     )
     return agent
@@ -95,7 +113,7 @@ async def main() -> None:
     # )
     global healing, poison, villagers, werewolves, seer, witch, hunter
     global current_alive
-    # 创建玩家
+    # 创建玩家, 初始化系统提示词和身份信息
     villagers = [await create_player("villager") for _ in range(3)]
     werewolves = [await create_player("werewolf") for _ in range(3)]
     seer = [await create_player("seer")]
@@ -119,7 +137,7 @@ async def main() -> None:
             await all_players_hub.broadcast(
                 await moderator(Prompts.to_all_night),
             )
-            killed_player, poisoned_player, shot_player = None, None, None
+            killed_player, poisoned_player, shot_player = None, None, None # 被杀死, 被毒死, 被猎人一换一
 
             # 狼人讨论
             async with MsgHub(
@@ -127,21 +145,27 @@ async def main() -> None:
                 enable_auto_broadcast=True,
                 announcement=await moderator(
                     Prompts.to_wolves_discussion.format(
-                        names_to_str(werewolves),
-                        names_to_str(current_alive),
+                        werewolve_names=names_to_str(werewolves),
+                        villager_names=names_to_str(villagers),
                     ),
                 ),
             ) as werewolves_hub:
-                # 讨论阶段
-                res = None
-                for _ in range(1, MAX_DISCUSSION_ROUND * len(werewolves) + 1):
-                    res = await werewolves[_ % len(werewolves)](
-                        structured_model=DiscussionModel,
-                    )
-                    if _ % len(werewolves) == 0 and res.metadata.get(
-                        "reach_agreement",
-                    ):
-                        break
+                # 狼人讨论阶段：轮流发言，直到达成一致或达到最大轮次
+                agreement_reached = False
+                # 总发言次数 = 最大讨论轮次 × 狼人数量
+                total_turns = MAX_DISCUSSION_ROUND * len(werewolves)
+                for turn in range(1, total_turns + 1):
+                    # 按顺序选出当前发言的狼人
+                    current_wolf_idx = (turn - 1) % len(werewolves)
+                    current_wolf = werewolves[current_wolf_idx]
+                    # 让当前狼人发言并返回结构化结果
+                    res = await current_wolf(structured_model=DiscussionModel) # TODO 本质是什么, LLM是如何处理结构化输出
+                    # 每完整轮次后检查是否全员达成一致
+                    if turn % len(werewolves) == 0:
+                        if res.metadata.get("reach_agreement"):
+                            agreement_reached = True
+                            break
+                # 如果循环结束仍未达成一致，res 保留最后一次发言结果
 
                 # 狼人投票
                 # 关闭自动广播以避免跟票
@@ -188,8 +212,7 @@ async def main() -> None:
                         healing = False
 
                 if poison and not (
-                    msg_witch_resurrect
-                    and msg_witch_resurrect.metadata["resurrect"]
+                    msg_witch_resurrect and msg_witch_resurrect.metadata["resurrect"]
                 ):
                     msg_witch_poison = await agent(
                         await moderator(
@@ -231,10 +254,7 @@ async def main() -> None:
             # 猎人回合
             for agent in hunter:
                 # 若被夜晚击杀，且不是女巫的毒药
-                if (
-                    killed_player == agent.name
-                    and poisoned_player != agent.name
-                ):
+                if killed_player == agent.name and poisoned_player != agent.name:
                     shot_player = await hunter_stage(agent)
 
             # 更新存活玩家列表
@@ -271,7 +291,7 @@ async def main() -> None:
             )
             # 开启自动广播以进行讨论
             all_players_hub.set_auto_broadcast(True)
-            await sequential_pipeline(current_alive)
+            await sequential_pipeline(current_alive) # 所有人顺序发言, 因为开启了自动广播, 所有消息都会进入all_players_hub
             # 关闭自动广播以避免泄露信息
             all_players_hub.set_auto_broadcast(False)
 
