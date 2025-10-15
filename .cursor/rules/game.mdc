@@ -1,0 +1,30 @@
+---
+alwaysApply: true
+---
+
+# 我现在正常参与一个比赛
+### 赛题描述
+
+本赛题需要参赛者基于 AgentScope 1.0 框架(当前项目框架)构建可以通过自主学习不断提升游戏水平的智能体，该智能体需要适应狼人杀游戏的角色，参与九人制狼人杀比赛，自主制定游戏策略并以游戏获胜为最终目标。该赛题考察Agent在动态环境中的学习能力、适应能力和策略优化能力。
+
+代码所在的目录是 `examples/agent_werewolves`, 目前大模型所需的环境变量 DASHSCOPE_API_KEY 已经成功配置了无需额外配置, 游戏主程序运行 `examples/game/werewolves/main.py`
+
+### 技术要求
+**需要选择使用AgentScope 1.0 框架和百炼平台的qwen-max模型。**
+
+- 在现有的agentscope.agent.ReActAgent基础上进行开发
+- 继承agentscope.agent.ReActAgentBase进行开发
+- 继承agentscope.agent.AgentBase进行开发
+- 最终，参赛选手开发的智能体类需要保证满足以下要求，可以通过如下方式调用：
+
+```
+agent(msg)  # msg 为`agentscope.message.Msg`类的实例
+agent()
+agent(msg, structured_model=StructuredModel)  # StructuredModel 为 pydantic.BaseModel 的子类
+```
+
+- 必须实现observe函数
+- 必须支持基于 BaseModel 的结构化输出功能
+- 必须支持 Session 读取和保存，即支持 state_dict() 和 load_state_dict() 函数
+- __call__以及reply返回的必须是合法的Msg对象
+
