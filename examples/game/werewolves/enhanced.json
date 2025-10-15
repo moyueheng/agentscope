@@ -1,0 +1,24 @@
+[
+  {
+    "game_id": 1,
+    "winner": "werewolves",
+    "total_rounds": 4,
+    "players": [
+      {
+        "name": "孙悦",
+        "role": "hunter",
+        "survived": true,
+        "rounds_survived": 4
+      },
+      {
+        "name": "高翔",
+        "role": "werewolf",
+        "survived": true,
+        "rounds_survived": 4
+      }
+    ],
+    "timestamp": "2025-10-16T00:24:12.626990",
+    "failed": false,
+    "error_message": null
+  }
+]

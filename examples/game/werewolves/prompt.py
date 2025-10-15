@@ -67,9 +67,7 @@ class Prompts:
 - 狼人可能会假冒预言家。保持警惕，不要轻信他人。
 - 夜间结果提供重要线索，例如女巫是否用了解药或毒药、死亡玩家是否为猎人等。根据信息调整策略。"""  # noqa
 
-    to_all_night = (
-        "夜晚降临，所有人请闭眼。狼人请睁眼并选择今晚要淘汰的一名玩家。"
-    )
+    to_all_night = "夜晚降临，所有人请闭眼。狼人请睁眼并选择今晚要淘汰的一名玩家。"
 
     to_wolves_discussion = (
         "[仅限狼人] {werewolve_names}，你们需要讨论并决定今晚要淘汰的一名玩家。当前存活玩家为{villager_names}。"
@@ -78,67 +76,45 @@ class Prompts:
 
     to_wolves_vote = "[仅限狼人] 你们投票决定要击杀哪位玩家？"
 
-    to_wolves_res = (
-        "[仅限狼人] 投票结果为 {}。因此你们选择淘汰 {}。"
-    )
+    to_wolves_res = "[仅限狼人] 投票结果为 {}。因此你们选择淘汰 {}。"
 
-    to_all_witch_turn = (
-        "轮到女巫行动，女巫请睁眼并决定你今晚的操作。"
-    )
+    to_all_witch_turn = "轮到女巫行动，女巫请睁眼并决定你今晚的操作。"
     to_witch_resurrect = (
         "[仅限女巫] {witch_name}，你是女巫，今晚 {dead_name} 被淘汰。你可以使用解药复活他/她。"
         "注意整局游戏解药仅能使用一次。你是否要复活 {dead_name}？请给出理由和决策。"
     )
 
-    to_witch_resurrect_no = (
-        "[仅限女巫] 女巫选择不复活该玩家。"
-    )
-    to_witch_resurrect_yes = (
-        "[仅限女巫] 女巫选择复活该玩家。"
-    )
+    to_witch_resurrect_no = "[仅限女巫] 女巫选择不复活该玩家。"
+    to_witch_resurrect_yes = "[仅限女巫] 女巫选择复活该玩家。"
 
-    to_witch_poison = (
-        "[仅限女巫] {witch_name}，作为女巫，你有一次性的毒药。你今晚是否要使用？请给出理由和决策。"
-    )
+    to_witch_poison = "[仅限女巫] {witch_name}，作为女巫，你有一次性的毒药。你今晚是否要使用？请给出理由和决策。"
 
-    to_all_seer_turn = (
-        "轮到预言家行动，预言家请睁眼并在今晚查验一名玩家的身份。"
-    )
+    to_all_seer_turn = "轮到预言家行动，预言家请睁眼并在今晚查验一名玩家的身份。"
 
     to_seer = (
         "[仅限预言家] {}，作为预言家，你可以在今晚查验一名玩家的身份。"
         "你想查验谁？请给出理由和决策。"
     )
 
-    to_seer_result = (
-        "[仅限预言家] 你查验了 {agent_name}，结果为：{role}。"
-    )
+    to_seer_result = "[仅限预言家] 你查验了 {agent_name}，结果为：{role}。"
 
     to_hunter = (
         "[仅限猎人] {name}，作为猎人，你今晚被淘汰。你可以选择带走一名玩家；也可以选择不使用该能力。"
         "请给出理由和决策。"
     )
 
-    to_all_hunter_shoot = (
-        "猎人选择将 {} 一并带走。"
-    )
+    to_all_hunter_shoot = "猎人选择将 {} 一并带走。"
 
-    to_all_day = (
-        "天亮了，所有玩家请睁眼。昨夜被淘汰的玩家为：{}。"
-    )
+    to_all_day = "天亮了，所有玩家请睁眼。昨夜被淘汰的玩家为：{}。"
 
-    to_all_peace = (
-        "天亮了，所有玩家请睁眼。昨夜平安无人被淘汰。"
-    )
+    to_all_peace = "天亮了，所有玩家请睁眼。昨夜平安无人被淘汰。"
 
     to_all_discuss = (
         "当前存活玩家为 {names}。游戏继续，请讨论并投票淘汰一名玩家。"
         "现在按 {names} 的顺序依次发言，每人一次。"
     )
 
-    to_all_vote = (
-        "讨论结束。请大家从存活玩家 {} 中投票淘汰一人。"
-    )
+    to_all_vote = "讨论结束。请大家从存活玩家 {} 中投票淘汰一人。"
 
     to_all_res = "投票结果为 {}。因此 {} 被投出。"
 
@@ -147,9 +123,6 @@ class Prompts:
         "游戏结束，狼人阵营获胜！🐺🏆"
     )
 
-    to_all_village_win = (
-        "所有狼人均已被淘汰。\n"
-        "游戏结束，村民阵营获胜！🏘️🎉"
-    )
+    to_all_village_win = "所有狼人均已被淘汰。\n游戏结束，村民阵营获胜！🏘️🎉"
 
     to_all_continue = "游戏继续。"

@@ -1,0 +1,8 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/Users/moyueheng/Projects/open_source/werewolves-cursor-optimize/examples/game/werewolves"
+    ],
+    "python.analysis.extraPaths": [
+        "/Users/moyueheng/Projects/open_source/werewolves-cursor-optimize/examples/game/werewolves"
+    ]
+}

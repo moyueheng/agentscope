@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """狼人杀游戏的工具函数。"""
+
 from typing import Any
 
 import numpy as np
@@ -10,7 +11,7 @@ from agentscope.message import Msg
 from agentscope.agent import ReActAgent, AgentBase
 
 MAX_GAME_ROUND = 30
-MAX_DISCUSSION_ROUND = 3 # 每个狼人最多发言3次
+MAX_DISCUSSION_ROUND = 3  # 每个狼人最多发言3次
 
 candidate_names = [
     "张伟",

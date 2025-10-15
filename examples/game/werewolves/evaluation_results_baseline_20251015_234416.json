@@ -1,0 +1,29 @@
+[
+  {
+    "game_id": 1,
+    "winner": "unknown",
+    "total_rounds": 0,
+    "players": [],
+    "timestamp": "2025-10-15T23:47:22.286517",
+    "failed": true,
+    "error_message": "Error code: 400 - {'object': 'error', 'message': \"4 validation errors for ValidatorIterator\\n0.ChatCompletionContentPartTextParam.text\\n  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]\\n    For further information visit https://errors.pydantic.dev/2.11/v/string_type\\n0.ChatCompletionContentPartTextParam.type\\n  Field required [type=missing, input_value={'text': None}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.11/v/missing\\n0.ChatCompletionContentPartRefusalParam.refusal\\n  Field required [type=missing, input_value={'text': None}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.11/v/missing\\n0.ChatCompletionContentPartRefusalParam.type\\n  Field required [type=missing, input_value={'text': None}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.11/v/missing None\", 'type': 'BadRequestError', 'param': None, 'code': 400}"
+  },
+  {
+    "game_id": 2,
+    "winner": "unknown",
+    "total_rounds": 0,
+    "players": [],
+    "timestamp": "2025-10-15T23:47:37.434068",
+    "failed": true,
+    "error_message": "ReActAgent.handle_interrupt() got an unexpected keyword argument 'structured_model'"
+  },
+  {
+    "game_id": 3,
+    "winner": "unknown",
+    "total_rounds": 0,
+    "players": [],
+    "timestamp": "2025-10-15T23:47:38.148958",
+    "failed": true,
+    "error_message": "ReActAgent.handle_interrupt() got an unexpected keyword argument 'structured_model'"
+  }
+]

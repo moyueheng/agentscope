@@ -10,6 +10,42 @@
             "request": "launch",
             "program": "examples/game/werewolves/main.py",
             "console": "integratedTerminal"
-        }
+        },
+        // python evaluate.py --num-games 1 --mode custom --custom-agent ../../agent_werewolves/enhanced_agent.py --output enhanced.json
+        {
+            "name": "Evaluate Enhanced Agent",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "evaluate.py",
+            "cwd": "examples/game/werewolves",
+            "args": [
+                "--num-games",
+                "1",
+                "--mode",
+                "custom",
+                "--custom-agent",
+                "../../agent_werewolves/enhanced_agent.py",
+                "--output",
+                "enhanced.json"
+            ],
+            "console": "integratedTerminal"
+        },
+        // python evaluate.py --num-games 1 --mode baseline --output baseline.json
+        {
+            "name": "Evaluate Baseline Mode (20 Games)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "evaluate.py",
+            "cwd": "examples/game/werewolves",
+            "args": [
+                "--num-games",
+                "1",
+                "--mode",
+                "baseline",
+                "--output",
+                "baseline.json"
+            ],
+            "console": "integratedTerminal"
+        },
     ]
 }

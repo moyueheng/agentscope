@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """狼人杀游戏的结构化输出模型。"""
+
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -45,9 +46,12 @@ def get_poison_model(agents: list[AgentBase]) -> type[BaseModel]:
         poison: bool = Field(
             description="是否要使用毒药",
         )
-        name: Literal[  # type: ignore
-            tuple(_.name for _ in agents)
-        ] | None = Field(
+        name: (
+            Literal[  # type: ignore
+                tuple(_.name for _ in agents)
+            ]
+            | None
+        ) = Field(
             description="你要毒杀的玩家姓名；如果不毒杀任何人，留空即可",
             default=None,
         )
@@ -77,9 +81,12 @@ def get_hunter_model(agents: list[AgentBase]) -> type[BaseModel]:
         shoot: bool = Field(
             description="是否要使用开枪技能",
         )
-        name: Literal[  # type: ignore
-            tuple(_.name for _ in agents)
-        ] | None = Field(
+        name: (
+            Literal[  # type: ignore
+                tuple(_.name for _ in agents)
+            ]
+            | None
+        ) = Field(
             description="你要开枪击杀的玩家姓名；如果不使用该技能，留空即可",
             default=None,
         )

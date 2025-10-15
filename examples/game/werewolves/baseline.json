@@ -1,0 +1,48 @@
+[
+  {
+    "game_id": 1,
+    "winner": "werewolves",
+    "total_rounds": 2,
+    "players": [
+      {
+        "name": "唐艳",
+        "role": "werewolf",
+        "survived": true,
+        "rounds_survived": 2
+      },
+      {
+        "name": "宋佳",
+        "role": "werewolf",
+        "survived": true,
+        "rounds_survived": 2
+      },
+      {
+        "name": "沈凌",
+        "role": "villager",
+        "survived": true,
+        "rounds_survived": 2
+      },
+      {
+        "name": "谢楠",
+        "role": "werewolf",
+        "survived": true,
+        "rounds_survived": 2
+      },
+      {
+        "name": "贾玲",
+        "role": "villager",
+        "survived": true,
+        "rounds_survived": 2
+      },
+      {
+        "name": "郭涛",
+        "role": "hunter",
+        "survived": true,
+        "rounds_survived": 2
+      }
+    ],
+    "timestamp": "2025-10-16T00:33:06.911889",
+    "failed": false,
+    "error_message": null
+  }
+]
