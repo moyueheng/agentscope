@@ -20,10 +20,10 @@ def get_vote_model(agents: list[AgentBase]) -> type[BaseModel]:
     """根据玩家姓名生成投票模型。"""
 
     class VoteModel(BaseModel):
-        """投票的输出格式。"""
+        """投票的输出格式"""
 
         vote: Literal[tuple(_.name for _ in agents)] = Field(  # type: ignore
-            description="你要投票给的玩家姓名",
+            description="你要投票给的玩家姓名, 不允许弃票, 必须投票给一个玩家",
         )
 
     return VoteModel
