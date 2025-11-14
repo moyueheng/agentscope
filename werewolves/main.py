@@ -82,11 +82,11 @@ async def main() -> None:
 
     # Uncomment the following lines if you want to use Agentscope Studio
     # to visualize the game process.
-    # import agentscope
-    # agentscope.init(
-    #     studio_url="http://localhost:3000",
-    #     project="werewolf_game",
-    # )
+    import agentscope
+    agentscope.init(
+        studio_url="http://localhost:3000",
+        project="werewolf_game",
+    )
 
     # Prepare 9 players, you can change their names here
     players = [get_official_agents(f"Player{_ + 1}") for _ in range(9)]
